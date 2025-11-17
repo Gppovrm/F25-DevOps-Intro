@@ -1,7 +1,5 @@
 # Lab 11 — Decentralized Web Hosting with IPFS & 4EVERLAND
 
----
-
 ## Tasks
 
 ### Task 1 — Local IPFS Node Setup and File Publishing (5 pts)
@@ -104,5 +102,29 @@ URL: `http://localhost:8080/ipfs/QmUFJmQRosK4Amzcjwbip8kV3gkJ8jqCURjCNxuv3bWYS1`
 
 ### Task 2 — Static Site Deployment with 4EVERLAND (5 pts)
 
+### 4EVERLAND Project URL
+`https://f25-devops-intro-gye79pd3-gppovrm.ipfs.4everland.app/`
 
+### IPFS CID from 4EVERLAND Dashboard
+`bafybeiffhpbj7u3zpsa2ywhnvh5ckn2gsdaniygytew6jock3nvkig51x3e`
 
+## Screenshots
+
+**4EVERLAND Deployment Dashboard:**
+
+<img width="1866" height="1014" alt="Снимок экрана 2025-11-18 003820" src="https://github.com/user-attachments/assets/60f08702-da74-4a33-adeb-34273d2230c4" />
+
+**Site Accessed Through 4EVERLAND Domain:**
+
+<img width="1917" height="983" alt="image" src="https://github.com/user-attachments/assets/e0683966-48f2-4c92-a6cd-409d8643015c" />
+
+**Site Accessed Through Public IPFS Gateway:**
+https://bafybeifhpby7u3zpsa2ywhwh5ckn2gsdsniygytew6jxok3nvkiq5t3v3e.ipfs.dweb.link/
+
+<img width="1900" height="950" alt="image" src="https://github.com/user-attachments/assets/2540ab27-f2c7-4714-8820-3e67b20e5e05" />
+
+## Analysis
+
+**How does 4EVERLAND simplify IPFS deployment compared to manual methods?**
+
+**What are the trade-offs between traditional web hosting and IPFS hosting?**
