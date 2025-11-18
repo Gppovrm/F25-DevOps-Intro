@@ -95,8 +95,18 @@ URL: `http://localhost:8080/ipfs/QmUFJmQRosK4Amzcjwbip8kV3gkJ8jqCURjCNxuv3bWYS1`
 
 **How does IPFS's content addressing differ from traditional URLs?**
 
+IPFS uses content-based hashes (CIDs) to find, verify, and share files across a decentralized network, where all content is referenced through a unique value known as the content identifier or CID. In comparison to location addressing, content addressing refers to what the stored data contains, versus where the content is located on the web server. Traditional URLs suffer from 'link rot' - if the URL's slug changes or is moved, the link no longer works and returns a 404 error, requiring entire web pages to be renamed and accessed through new URLs.
 
 **What are the advantages and disadvantages of decentralized storage?**
+
+**Advantages:** Content addressing **isn't affected by link rot** and provides **immutability** - data files stored on IPFS are immutable since any change to file contents results in a new, unique CID.
+
+**Disadvantages:**
+- **Temporary cache dependency** - If files are not "pinned", they are stored in temporary cache and periodically removed by garbage collection
+- **Unreliable availabilitye** - Files are only available as long as at least one node stores them; if all nodes remove your content, it disappears forever
+- **No guaranteed availability** - Unlike traditional hosting where you pay and files are guaranteed to be stored, IPFS relies on voluntary participation
+- **Variable performance** - If a file is only on one node in another country, loading will be slow; popular content loads fast, rare content loads slowly
+- **Update complexity** - Any file change creates a new CID and requires distributing new links throughout the network
 
 ---
 
@@ -110,21 +120,38 @@ URL: `http://localhost:8080/ipfs/QmUFJmQRosK4Amzcjwbip8kV3gkJ8jqCURjCNxuv3bWYS1`
 
 ## Screenshots
 
-**4EVERLAND Deployment Dashboard:**
+### 4EVERLAND Deployment Dashboard:
 
 <img width="1866" height="1014" alt="Снимок экрана 2025-11-18 003820" src="https://github.com/user-attachments/assets/60f08702-da74-4a33-adeb-34273d2230c4" />
 
-**Site Accessed Through 4EVERLAND Domain:**
+### Site Accessed Through 4EVERLAND Domain:
 
 <img width="1917" height="983" alt="image" src="https://github.com/user-attachments/assets/e0683966-48f2-4c92-a6cd-409d8643015c" />
 
-**Site Accessed Through Public IPFS Gateway:**
+### Site Accessed Through Public IPFS Gateway:
+
 https://bafybeifhpby7u3zpsa2ywhwh5ckn2gsdsniygytew6jxok3nvkiq5t3v3e.ipfs.dweb.link/
 
 <img width="1900" height="950" alt="image" src="https://github.com/user-attachments/assets/2540ab27-f2c7-4714-8820-3e67b20e5e05" />
+
+## Test Continuous Deployment (Optional)
+
+I pushed 2 new commits to the GitHub repository and 4EVERLAND automatically detected the changes: 
+
+<img width="1898" height="614" alt="image" src="https://github.com/user-attachments/assets/dda76563-9aea-42b2-801d-d2a1ebd97c16" />
+
+After clicking the Deploy button, the site was **successfully updated**, demonstrating the **continuous deployment** workflow:
+
+<img width="1680" height="894" alt="image" src="https://github.com/user-attachments/assets/0dc7adc4-06bf-4dca-9697-478c50a1a001" />
+
+<img width="1366" height="564" alt="image" src="https://github.com/user-attachments/assets/2de9a4a9-86cc-4fa3-a932-30f0e0495eea" />
 
 ## Analysis
 
 **How does 4EVERLAND simplify IPFS deployment compared to manual methods?**
 
+4EVERLAND makes IPFS deployment as easy as traditional web hosting. Instead of dealing with complex peer-to-peer networks and command-line tools, you simply connect your GitHub repository and the platform handles everything automatically. It generates IPFS hashes, provides free CDN and SSL certificates, and sets up continuous deployment so your site updates whenever you push changes to GitHub. All the technical complexities of decentralized storage are handled behind the scenes.
+
 **What are the trade-offs between traditional web hosting and IPFS hosting?**
+
+Traditional hosting is simpler and more predictable but relies on central servers that can fail or be censored. IPFS offers better reliability through decentralization - your content stays available even if some nodes go offline - but can be slower for rarely accessed files since they might be stored on distant nodes. Traditional hosting gives you clear performance guarantees for a price, while IPFS depends on network participation where no single entity guarantees your files will always be available unless you actively ensure they're pinned across multiple nodes.
