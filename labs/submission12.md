@@ -59,52 +59,58 @@ The same binary handles all these situations without maintaining separate versio
 **Result:** 1.148MiB
 
 ---
-
 ## Task 3 — Build WASM Container (ctr-based) (3 pts)
 
-### TinyGo Version
-**Version:** 0.39.0
-
-### WASM Binary Size
-**Command:** `ls -lh main.wasm`  
-**Result:** 2.4M  
+- TinyGo version used: 0.39.0
+- WASM binary size (from `ls -lh main.wasm`): 2.4M  
 ![WASM Binary Size](https://github.com/user-attachments/assets/2a4dfe7f-644e-4ebb-89ab-e0b73cce10d1)
-
-- WASI image size (from `ctr images ls`)
-- Average startup time from the `ctr run` benchmark loop (CLI mode)
+- WASI image size (from `ctr images ls`): 819.9 KiB  
+![WASI Image Size](https://github.com/user-attachments/assets/2f93de60-47e4-4991-884a-73bd8ee4373d)
+- Average startup time from the `ctr run` benchmark loop (CLI mode): 0.5260 seconds  
+![Startup Benchmark](https://github.com/user-attachments/assets/de2098bd-b08e-4e1f-96a2-617c87edf715)
 - Explanation of why server mode doesn't work under `ctr` (WASI Preview1 lacks socket support)
-- Note that server mode **can** be demonstrated via Spin using the same `main.wasm`
-- Memory usage reporting (likely "N/A" with explanation)
-- Note: used **same source code** as traditional build
-- Confirmation that you used `ctr` (containerd CLI) for WASM execution
+  
+   The TinyGo net/http library cannot open network sockets in this environment.
+  
+- Note that server mode **can** be demonstrated via Spin using the same `main.wasm`: Yes, Spin provides HTTP server abstraction via WAGI executor
+- Memory usage reporting: N/A - not available via ctr. WASM uses different memory management in wasmtime runtime.
+- Note: used **same source code** as traditional build: Yes, same main.go file used for both builds
 
 ---
-
 ## Task 4 — Performance Comparison & Analysis (2 pts)
 
-In `labs/submission12.md`, document:
-- Complete comparison table with all metrics
-- Calculated improvement percentages
-- Detailed answers to all questions
-- Recommendations for when to use each approach
+### 4.1 Performance Comparison Table
 
----
+| Metric | Traditional Container | WASM Container | Improvement | Notes |
+|--------|----------------------|----------------|-------------|-------|
+| **Binary Size** | 4.5 MB | 2.4 MB | 47% smaller | From `ls -lh` |
+| **Image Size** | 4.7 MB | 0.8 MB | 83% smaller | From `docker image inspect` and `ctr images ls` |
+| **Startup Time (CLI)** | 394 ms | 526 ms | 0.75x slower | Average of 5 runs |
+| **Memory Usage** | 1.14 MB | N/A | N/A | From `docker stats` |
+| **Base Image** | scratch | scratch | Same | Both minimal |
+| **Source Code** | main.go | main.go | Same | ✅ Same file! |
+| **Server Mode** | ✅ Works (net/http) | ❌ Not via ctr <br> ✅ Via Spin (WAGI) | N/A | WASI Preview1 lacks sockets; <br> Spin provides HTTP abstraction |
 
-## Bonus Task — Deploy to Fermyon Spin Cloud (Extra Credit)
-In your **bonus section** of `labs/submission12.md`, document:
+**Improvement Calculations:**
+- **Binary Size reduction:** ((4.5 - 2.4) / 4.5) × 100 = 47% smaller
+- **Image Size reduction:** ((4.7 - 0.8) / 4.7) × 100 = 83% smaller  
+- **Speed improvement:** 394 / 526 = 0.75x (WASM is slower in this test)
+  
+### 4.2 Analysis Questions
 
-- Public URL of your deployed application (`$SPIN_URL`)
-- Deployment time from `spin deploy` command output
-- **Cold start measurements:**
-  - Calculated average cold start time
-- **Warm measurements:**
-  - Calculated average warm time
-  - Comparison with cold start times
-- **Local Spin measurements:**
-  - Calculated average local time
-  - Comparison with cloud deployment
-- **Reflection:**
-  - Would you use Spin for production workloads? Why or why not?
-  - How does this compare to traditional serverless (AWS Lambda, Cloud Functions)?
+1. **Binary Size Comparison:**
+   - Why is the WASM binary so much smaller than the traditional Go binary? 
+   The WASM binary is significantly smaller (2.4MB vs 4.5MB) сuz TinyGo strips out the full Go runtime and only includes what's actually needed for WASM
+   - What did TinyGo optimize away?
+   TinyGo optimized away the garbage collector, unused standard library packages, and platform-specific system code
 
----
+2. **Startup Performance:**
+   - Why does WASM start faster?
+   - What initialization overhead exists in traditional containers?
+   In our test, WASM actually started slower (526ms vs 394ms) which surprised me. Normally it should be faster since it skips container setup and runs directly in the runtime. Traditional containers have to set up namespaces, networking, and filesystems which adds overhead.
+
+3. **Use Case Decision Matrix:**
+   - When would you choose WASM over traditional containers?
+   Choose WASM for edge computing, serverless platforms, security-sensitive apps, and multi-platform deployment
+   - When would you stick with traditional containers?
+   Stick with traditional containers for full system access, complex networking, existing Docker tooling, and Kubernetes orchestration
